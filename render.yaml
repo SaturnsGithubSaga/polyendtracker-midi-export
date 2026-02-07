@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: polyend-midi-export
+    env: docker
+    plan: free
+    region: frankfurt
+    healthCheckPath: /_stcore/health
+    envVars:
+      - key: PORT
+        value: 8501

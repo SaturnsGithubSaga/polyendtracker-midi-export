@@ -82,6 +82,11 @@ class Project:
         """
         expected_length = Project.OFFSET_END - Project.OFFSET_START  # 6152 or 769*8 just for sanity check
 
+        # NOTE: Newer firmware (1.6+) increased project file size.
+        # We slice the data to the expected legacy length to prevent errors.
+        if len(data) > expected_length:
+            data = data[:expected_length]
+
         if len(data) != expected_length:
             raise ValueError(f"Expected project data {expected_length} bytes long, got {len(data)} instead")
 

@@ -1,100 +1,50 @@
-# Polyend Tracker MIDI Export tool
+# Polyend Tracker MIDI Export (Dockerized & Patched)
 
-MIDI conversion tool for Polyend Tracker project files written in Python.
+> 🎹 **Context:** This is a specialized fork designed to run as a Docker Container with a Web Interface. It includes critical fixes for **Firmware 1.6+** headers and specific **"Orphan Note-Off"** crashes.
 
-If you just want to convert your Tracker project to MIDI you can use the Web Service: https://polyend-tracker-midi-export.onrender.com/
+## 🤖 Disclaimer: AI-Assisted Development
+This project is a result of **"Vibecoding"**.
+* **The Code:** All patches, Docker configurations, and the web interface were written by **Google Gemini (Pro model)**.
+* **The Maintainer:** A musician that was fond of the original tool and wanted to help fix it, but has no other experience with Python other than copy-pasting YAML code into his Home Assistant instance 🤓.
+* **The Process:** The Maintainer provided the initial problem, crash logs, testing, and workflow context. The AI analyzed the stack traces and generated the patches and treated the maintainer like a fool that doesn't know what hes doing every now and then. 
+
+*If the code looks unconventional, blame the AI. If it works perfectly, credit the collaboration.* 
+
+## 🚀 Why use this version?
+Use this version if the original crashes for you or if you want to self-host it easily via Docker.
+
+### Changes & Fixes
+1.  **Dockerized:** packaged with Streamlit for easy self-hosting (or running on Render).
+*So I could have a fast private version in my own Docker*
+2.  **Fix (FW 1.6+):** Updated the file header check (`1572` vs `2324` bytes) to support newer firmware.
+*We used my current Firmware version 1.9.2 for testing but Gemini keeps insisting 1.6+ in it's drafts. Anyway the problem was that after version 1.6 the project file sizes became larger than accounted for. Gemini's fix was to cut off the extra data assuming it would be new settings we won't need for MIDI export.*
+3.  **Fix (Crash):** Patched the `midiutil` library to prevent `IndexError` crashes caused by "Orphan Note-Offs" (common in some tracking workflows).
+*So I have a lot of patterns that start with Note-Offs on all tracks. I do this to stop all samples (or instruments over MIDI) from playing, since I don't always have room for that in the former pattern. The original tool didn't like that, because there were no notes being triggered in that pattern before the Note-Offs.*
+
+## 🛠️ Usage
 
 
-## Disclaimer
+### Option 1: Docker (Recommended)
+You can run this locally on any machine with Docker.
 
-I am in no way affiliated with Polyend. This is a hobby project.
-
-## Installation 
-
-```sh
-pip install polyendtracker-midi-export
+```bash
+docker build -t polymidi .
+docker run -d -p 8501:8501 polymidi
 ```
+Then open http://localhost:8501 in your browser.
 
-## Usage
+Option 2: Deploy to Cloud
+You can host this for free on Render.com (for personal use or sharing).
 
-Polyend Tracker MIDI Export tool can be used as a command line utility or as a library that can be imported in your python projects.
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
 
-### Converting an entire Tracker project to MIDI
+## CREDITS & LICENSE
+* **Original Tool:** * **Original Tool:** Created by [DataGreed](https://github.com/DataGreed/polyendtracker-midi-export).
 
-Just point the script to your project's directory:
+* **Maintenance & Dockerization:** SaturnsGithubSaga 
 
-```sh
-$ polymidiexport ./my-tracker-project/ 
-```
+* **Fix Methodology:** The midiutil patch was developed by analyzing specific crash logs related to pattern clean-up commands.
 
-Alternatively point it to a project file:
+This project is open-source and follows the license of the original repository.
 
-```sh
-$ polymidiexport ./my-tracker-project/project-file.mt 
-```
-
-
-### Converting an individual Tracker pattern file to MIDI
-
-Converting Polyend Tracker `*.mtp` pattern file to midi (pattern files are nested in project folders under `patterns`):
-
-```sh
-$ polymidiexport ./my-tracker-project/patterns/pattern_02.mtp 
-```
-
-Specifying custom output file name:
-
-```sh
-$ polymidiexport ./my-tracker-project/patterns/pattern_02.mtp ./my-midi-file.mid
-```
-
-Converting Polyend Tracker `*.mtp` pattern file to a text file (outputs a table view of the 
-pattern similar to how you see it in Tracker UI):
-
-```sh
-:$ python polytracker2text.py ./my-tracker-project/patterns/pattern_02.mtp 
-```
-
-You can see an example of pattern text representation [here](./reverse-engineering/session%201/project%20files/datagreed%20-%20rebel%20path%20tribute%202/patterns/pattern_01.txt)
-
-## Usage in python projects
-
-Import lib:
-
-```python
-import polytrackermidi
-from polytrackermidi.parsers import constants, project, patterns, arps, chords
-from polytrackermidi.exporters import midi
-```
-
-```python
-#todo: describe API usage
-```  
-
-## Reverse Engineering
-
-- [Pattern *.mtp files](reverse-engineering/patterns-reverse-engineering.md)
- 
-## TODOs
-
-- ~~Pattern file parsing~~
-- Render names for All FX types 
-- Support rendering of all possible ranges of values for FXs
-- Pattern MIDI export
-  - ~~basic export~~
-  - support for velocity (volume FX)
-  - ~~support for chord FX~~
-    - make sure that all chord interval formulas are correct 
-  - ~~support for arp FX~~
-  - support for microtiming (micromove, `m`) FX
-  - support for microtuning `M` fx (do midi files support that?) 
-  - ~~cli tool for converting files~~
-  - support for panning ([it seems](http://midi.teragonaudio.com/tech/midispec/pan.htm) to be supported by midi )
-- Song arrangement MIDI export
-  - ~~export~~
-  - ~~extract BPM~~
-  - ~~cli tool for converting files~~
-  - assign instrument names to midi tracks from instrument project files
-- ~~PyPi package~~
-- ~~conversion web service~~ – https://polyend-tracker-midi-export.onrender.com/
 
