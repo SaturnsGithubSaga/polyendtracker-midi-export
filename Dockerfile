@@ -27,4 +27,4 @@ RUN cp /tmp/MidiFile.py $(python -c "import site; print(site.getsitepackages()[0
 EXPOSE 8501
 
 # Command to run on container start
-CMD ["streamlit", "run", "app.py", "--server.address=0.0.0.0"]
+CMD sh -c "streamlit run app.py --server.port=${PORT:-8501} --server.address=0.0.0.0"
