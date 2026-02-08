@@ -2,6 +2,8 @@
 
 > 🎹 **Context:** This is a specialized fork designed to run as a Docker Container with a Web Interface. It includes critical fixes for **Firmware 1.6+** headers and specific **"Orphan Note-Off"** crashes.
 
+> The original code was created by [DataGreed](https://github.com/DataGreed/polyendtracker-midi-export).
+
 ## 🤖 Disclaimer: AI-Assisted Development
 This project is a result of **"Vibecoding"**.
 * **The Code:** All patches, Docker configurations, and the web interface were written by **Google Gemini (Pro model)**.
@@ -39,7 +41,7 @@ You can host this for free on Render.com (for personal use or sharing).
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
 
 ## CREDITS & LICENSE
-* **Original Tool:** * **Original Tool:** Created by [DataGreed](https://github.com/DataGreed/polyendtracker-midi-export).
+* **Original Tool:** Created by [DataGreed](https://github.com/DataGreed/polyendtracker-midi-export).
 
 * **Maintenance & Dockerization:** SaturnsGithubSaga 
 
